@@ -15,4 +15,9 @@ public class IndexController {
     public String map() {
         return "map";
     }
+
+    @RequestMapping("/travelMap")
+    public String travelMap() {
+        return "travelMap";
+    }
 }
