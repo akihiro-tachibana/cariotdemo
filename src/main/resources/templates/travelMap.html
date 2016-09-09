@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Test TravelMap</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- TODO:本番用に変更が筆用-->
+    <script src="/js/jquery-3.1.0.min.js"></script>
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyB8DFkfcAxAyY5GMcAvZxDPrUTlBoOoFPs"></script>
+    <script>
+        $(function(){
+            console.log("start");
+
+            var map, mapOptions, latlng;
+
+            latlng = new google.maps.LatLng(35.675727, 139.771946);
+
+            mapOptions = {
+                zoom: 15,
+                center: latlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+
+            var latLngs = [
+                new google.maps.LatLng(35.676224,139.769800),
+                new google.maps.LatLng(35.677226,139.766979),
+                new google.maps.LatLng(35.675500,139.765863)
+            ];
+            var polyline = new google.maps.Polyline({
+                path: latLngs,
+                strokeColor: "#FF0000",
+                strokeOpacity: 1.0,
+                strokeWeight: 5
+            });
+            polyline.setMap(map);
+        });
+    </script>
+    <style>
+        html { height: 100%; }
+        body { height: 100%; margin: 0; padding: 0; }
+        #map_canvas { height: 100%; width:100%;}
+    </style>
+</head>
+<body>
+<div id="map_canvas"></div>
+</body>
+</html>

@@ -3,10 +3,12 @@
 <head>
     <title>Test GoogleMap</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- TODO:本番用に変更が筆用-->
     <script src="/js/jquery-3.1.0.min.js"></script>
     <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyB8DFkfcAxAyY5GMcAvZxDPrUTlBoOoFPs"></script>
     <script>
         $(function(){
+            console.log("start");
 
             var map, marker;
 
@@ -16,6 +18,7 @@
                 navigator.geolocation.getCurrentPosition(
                         function(position){
 
+                            console.log("success");
                             var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
                             var mapOptions = {
@@ -43,7 +46,7 @@
                 // を移動していく。
                 var positionOptions = {
                     enableHighAccuracy: false,
-                    timeout: 30000, //TODO:トンネルとかあるので調整する必要がある。
+                    timeout: 5000, //TODO:トンネルとかあるので調整する必要がある。
                     maximumAge: 0
                 };
                 navigator.geolocation.watchPosition(
@@ -71,6 +74,7 @@
                         positionOptions);
 
             } else {
+                console.log("error");
                 // TODO:エラー時のハンドリング
                 document.getElementById("map_canvas").innerHTML = "Geolocationが利用できません";
             }
