@@ -1,10 +1,88 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Getting Started: Serving Web Content</title>
+    <title>Test GoogleMap</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyB8DFkfcAxAyY5GMcAvZxDPrUTlBoOoFPs"></script>
+    <script>
+        $(function(){
+
+            var map, marker;
+
+            if (navigator.geolocation) {
+
+                // 現在地取得と地図作成
+                navigator.geolocation.getCurrentPosition(
+                        function(position){
+
+                            var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+                            var mapOptions = {
+                                zoom: 15,
+                                center: latlng,
+                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                            };
+                            map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+
+                            marker = new google.maps.Marker({
+                                position: latlng,
+                                map: map,
+                                title:"Your position"
+                            });
+
+                        },
+                        function(error){
+
+                            // TODO:エラー時のハンドリング
+                            console.warn('ERROR(' + error.code + '): ' + error.message);
+
+                        }
+                );
+
+                // を移動していく。
+                var positionOptions = {
+                    enableHighAccuracy: false,
+                    timeout: 30000, //TODO:トンネルとかあるので調整する必要がある。
+                    maximumAge: 0
+                };
+                navigator.geolocation.watchPosition(
+                        function(position){
+
+                            //現在地マーカーが設置されている場合は消去
+                            if( marker ){
+                                marker.setMap(null);
+                            }
+
+                            var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+                            marker = new google.maps.Marker({
+                                position: latlng,
+                                map: map,
+                                title:"Your position"
+                            });
+
+                        },
+                        function(error){
+
+                            // TODO:エラー時のハンドリング
+                            console.warn('ERROR(' + error.code + '): ' + error.message);
+                        },
+                        positionOptions);
+
+            } else {
+                // TODO:エラー時のハンドリング
+                document.getElementById("map_canvas").innerHTML = "Geolocationが利用できません";
+            }
+        });
+    </script>
+    <style>
+        html { height: 100%; }
+        body { height: 100%; margin: 0; padding: 0; }
+        #map_canvas { height: 100%; width:100%;}
+    </style>
 </head>
 <body>
-<p th:text="'Hello, map!'" />
+<div id="map_canvas"></div>
 </body>
 </html>
