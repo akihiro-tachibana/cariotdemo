@@ -3,11 +3,35 @@
 <head>
     <title>Test GoogleMap</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <!-- TODO:本番用に変更が筆用-->
-    <script src="js/jquery-3.1.0.min.js"></script>
+    <!-- TODO:本番用に変更が必要-->
+    <script src="/js/jquery-3.1.0.min.js"></script>
     <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyB8DFkfcAxAyY5GMcAvZxDPrUTlBoOoFPs"></script>
     <script>
         $(function(){
+
+            var accX,accY,accZ;
+
+            // DeviceMotion Event
+            window.addEventListener("devicemotion",
+
+                    // 加速度が変化
+                    function devicemotionHandler(event) {
+                        // 加速度
+                        // X軸
+                        accX = event.acceleration.x;
+                        // Y軸
+                        accY = event.acceleration.y;
+                        // Z軸
+                        accZ = event.acceleration.z;
+
+//                        $("#accelerationX span").html(event.acceleration.x.toString());
+//                        $("#accelerationY span").html(event.acceleration.y.toString());
+//                        $("#accelerationZ span").html(event.acceleration.z.toString());
+
+                        //console.log("加速度 x:" + x + "y:" + y + "z:" + z);
+                        //$("#acceleration").html("加速度 x:" + x + "y:" + y + "z:" + z);
+                    }
+            );
 
             var map, marker;
 
@@ -62,21 +86,47 @@
                             $("#heading span").html(position.coords.heading.toString());
                             $("#speed span").html(position.coords.speed.toString());
                             $("#altitude span").html(position.coords.altitude.toString());
+                            $("#accelerationX span").html(accX);
+                            $("#accelerationY span").html(accY);
+                            $("#accelerationZ span").html(accZ);
 
-//                            $.ajax({
-//                                type: "GET",
-//                                url: "/cariot/doLog",
-//                                data: {
-//                                    "latitude": position.coords.latitude,
-//                                    "longitude": position.coords.longitude,
-//                                    "altitude": position.coords.altitude,
-//                                    "speed": position.coords.speed,
-//                                    "heading": position.coords.heading
+                            var date = new Date();
+
+//                            var data = {
+//                                deviceSn: "224792822421692416",
+//                                latitude: position.coords.latitude,
+//                                longitude: position.coords.longitude,
+//                                timestamp: date.getTime(),
+//                                height: position.coords.altitude,
+//                                speed: position.coords.speed,
+//                                direction: position.coords.heading,
+//                                accX: accX,
+//                                accY: accY,
+//                                accZ: accZ
+//                            };
+
+                            $.ajax({
+                                type: "POST",
+                                url: "/cariot/logs",
+//                                headers: {
+//                                    "Content-Type": "application/json",
+//                                    "X-Auth-Token": "47c3b8f1-90cf-4da6-839e-3ca25856d80b",
+//                                    "Origin": "https://receiver.cariot.jp"
 //                                },
-//                                success: function(msg){
-//                                    console.log("doLog: " + msg );
-//                                }
-//                            });
+                                data: {
+                                    latitude: position.coords.latitude,
+                                    longitude: position.coords.longitude,
+                                    height: position.coords.altitude,
+                                    speed: position.coords.speed,
+                                    direction: position.coords.heading,
+                                    accX: accX,
+                                    accY: accY,
+                                    accZ: accZ
+                                },
+                                success: function(msg){
+                                    console.log("doLog: " + msg );
+                                }
+                            });
 
                             //現在地マーカーが設置されている場合は消去
                             if( marker ){
@@ -103,29 +153,6 @@
                 // TODO:エラー時のハンドリング
                 document.getElementById("map_canvas").innerHTML = "Geolocationが利用できません";
             }
-
-
-            // DeviceMotion Event
-            window.addEventListener("devicemotion", devicemotionHandler);
-
-            // 加速度が変化
-            function devicemotionHandler(event) {
-                // 加速度
-                // X軸
-                var x = event.acceleration.x;
-                // Y軸
-                var y = event.acceleration.y;
-                // Z軸
-                var z = event.acceleration.z;
-
-                $("#accelerationX span").html(event.acceleration.x.toString());
-                $("#accelerationY span").html(event.acceleration.y.toString());
-                $("#accelerationZ span").html(event.acceleration.z.toString());
-
-                //console.log("加速度 x:" + x + "y:" + y + "z:" + z);
-                //$("#acceleration").html("加速度 x:" + x + "y:" + y + "z:" + z);
-            }
-
         });
     </script>
     <style>
