@@ -4,11 +4,10 @@
     <title>Test GoogleMap</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <!-- TODO:本番用に変更が筆用-->
-    <script src="/js/jquery-3.1.0.min.js"></script>
+    <script src="js/jquery-3.1.0.min.js"></script>
     <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyB8DFkfcAxAyY5GMcAvZxDPrUTlBoOoFPs"></script>
     <script>
         $(function(){
-            console.log("start");
 
             var map, marker;
 
@@ -18,7 +17,6 @@
                 navigator.geolocation.getCurrentPosition(
                         function(position){
 
-                            console.log("success");
                             var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
                             var mapOptions = {
@@ -52,6 +50,34 @@
                 navigator.geolocation.watchPosition(
                         function(position){
 
+                            //TODO:デバッグ
+//                            console.log("緯度:" + position.coords.latitude);
+//                            console.log("経度:" + position.coords.longitude);
+//                            console.log("方角:" + position.coords.heading);
+//                            console.log("速度:" + position.coords.speed);
+//                            console.log("高度:" + position.coords.altitude);
+
+                            $("#latitude span").html(position.coords.latitude.toString());
+                            $("#longitude span").html(position.coords.longitude.toString());
+                            $("#heading span").html(position.coords.heading.toString());
+                            $("#speed span").html(position.coords.speed.toString());
+                            $("#altitude span").html(position.coords.altitude.toString());
+
+//                            $.ajax({
+//                                type: "GET",
+//                                url: "/cariot/doLog",
+//                                data: {
+//                                    "latitude": position.coords.latitude,
+//                                    "longitude": position.coords.longitude,
+//                                    "altitude": position.coords.altitude,
+//                                    "speed": position.coords.speed,
+//                                    "heading": position.coords.heading
+//                                },
+//                                success: function(msg){
+//                                    console.log("doLog: " + msg );
+//                                }
+//                            });
+
                             //現在地マーカーが設置されている場合は消去
                             if( marker ){
                                 marker.setMap(null);
@@ -74,19 +100,49 @@
                         positionOptions);
 
             } else {
-                console.log("error");
                 // TODO:エラー時のハンドリング
                 document.getElementById("map_canvas").innerHTML = "Geolocationが利用できません";
             }
+
+
+            // DeviceMotion Event
+            window.addEventListener("devicemotion", devicemotionHandler);
+
+            // 加速度が変化
+            function devicemotionHandler(event) {
+                // 加速度
+                // X軸
+                var x = event.acceleration.x;
+                // Y軸
+                var y = event.acceleration.y;
+                // Z軸
+                var z = event.acceleration.z;
+
+                $("#accelerationX span").html(event.acceleration.x.toString());
+                $("#accelerationY span").html(event.acceleration.y.toString());
+                $("#accelerationZ span").html(event.acceleration.z.toString());
+
+                //console.log("加速度 x:" + x + "y:" + y + "z:" + z);
+                //$("#acceleration").html("加速度 x:" + x + "y:" + y + "z:" + z);
+            }
+
         });
     </script>
     <style>
         html { height: 100%; }
-        body { height: 100%; margin: 0; padding: 0; }
+        body { height: 80%; margin: 0; padding: 0; }
         #map_canvas { height: 100%; width:100%;}
     </style>
 </head>
 <body>
-<div id="map_canvas"></div>
+<div id="latitude">緯度:<span></span></div>
+<div id="longitude">経度:<span></span></div>
+<div id="heading">方角:<span></span></div>
+<div id="speed">速度:<span></span></div>
+<div id="altitude">高度:<span></span></div>
+<div id="accelerationX">加速度X軸:<span></span></div>
+<div id="accelerationY">加速度Y軸:<span></span></div>
+<div id="accelerationZ">加速度Z軸:<span></span></div>
+<!--<div id="map_canvas"></div>-->
 </body>
 </html>
