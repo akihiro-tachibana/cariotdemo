@@ -32,6 +32,10 @@
 
             var click, mouseX;
 
+            window.addEventListener("touchstart", function(){
+                alert("加速度 x:" + accX);
+            });
+
             window.addEventListener("click", function(){
                 alert("加速度 x:" + accX);
             });
