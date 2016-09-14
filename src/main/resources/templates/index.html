@@ -9,11 +9,6 @@
         $(function() {
 
             var accX, accY, accZ;
-            $("#accX span").html("hoge");
-            //console.log("hoge");
-
-            //console.log("hoge");
-            $("#accX span").html("hoge");
 
             // DeviceMotion Event
             window.addEventListener("devicemotion", function devicemotionHandler(event) {
@@ -30,7 +25,38 @@
                 $("#accZ span").html(accZ);
             });
 
-            var click, mouseX;
+            if (navigator.geolocation) {
+
+                // 現在地取得と地図作成
+                navigator.geolocation.getCurrentPosition(
+                        function (position) {
+
+                            alert("加速度 x:" + accX);
+
+                            var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+                            var mapOptions = {
+                                zoom: 17,
+                                center: latlng,
+                                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                                mapTypeControl: false,
+                                streetViewControl: false,
+                                draggable: false
+                            };
+                            map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+
+
+                            marker = new google.maps.Marker({
+                                position: latlng,
+                                map: map,
+                                icon: iconImg
+                            });
+
+                        }
+                );
+            }
+
+                var click, mouseX;
 
             window.addEventListener("touchstart", function(){
                 alert("加速度 x:" + accX);
