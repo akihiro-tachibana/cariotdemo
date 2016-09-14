@@ -4,10 +4,13 @@
     <title>Test Event</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script src="../static/js/jquery-3.1.0.min.js"></script>
+    <script src="/js/jquery-3.1.0.min.js"></script>
     <script>
         $(function() {
 
             var accX, accY, accZ;
+            $("#accX span").html("hoge");
+            //console.log("hoge");
 
             // DeviceMotion Event
             window.addEventListener("devicemotion", function devicemotionHandler(event) {
