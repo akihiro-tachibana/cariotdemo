@@ -1,11 +1,48 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Getting Started: Serving Web Content</title>
+    <title>Test Event</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="../static/js/jquery-3.1.0.min.js"></script>
+    <script>
+        $(function() {
+
+            var accX, accY, accZ;
+
+            // DeviceMotion Event
+            window.addEventListener("devicemotion", function devicemotionHandler(event) {
+                // 加速度
+                // X軸
+                accX = event.acceleration.x;
+                // Y軸
+                accY = event.acceleration.y;
+                // Z軸
+                accZ = event.acceleration.z;
+
+                $("#accX span").html(accX);
+                $("#accY span").html(accY);
+                $("#accZ span").html(accZ);
+            });
+
+            var click, mouseX;
+
+            window.addEventListener("click", function(){
+                console.log("加速度 x:" + accX);
+            });
+
+            window.addEventListener("mousemove", function(evnet){
+                //console.log(evnet.clientX);
+                mouseX = evnet.clientX;
+            });
+        });
+    </script>
 </head>
 <body>
-<p th:text="'Hello, index5!'" />
-<h1>index</h1>
+<div class="container">
+    <h2>Test Event</h2>
+    <div id="accX">accX：<span></span></div>
+    <div id="accY">accY：<span></span></div>
+    <div id="accZ">accZ：<span></span></div>
+</div>
 </body>
 </html>
